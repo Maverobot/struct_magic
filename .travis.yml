@@ -1,0 +1,84 @@
+language: cpp
+os: linux
+
+env:
+  global:
+    # Global build options and C++ flags
+    - CXX_FLAGS="-Wall -pedantic -Werror -Wno-variadic-macros -Wno-long-long -Wno-shadow"
+
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      addons:
+        apt:
+          packages: &bionic_latest_boost_packages
+            - gcc
+            - g++
+            - clang
+            - lcov
+            - libboost-dev
+    - os: linux
+      dist: bionic
+      compiler: clang
+      addons:
+        apt:
+          packages: &bionic_latest_boost_packages
+            - gcc
+            - g++
+            - clang
+            - lcov
+            - libboost-dev
+    - os: linux
+      dist: xenial
+      compiler: gcc
+      addons:
+        apt:
+          packages: &bionic_latest_boost_packages
+            - gcc
+            - g++
+            - clang
+            - lcov
+            - libboost-dev
+    - os: linux
+      dist: xenial
+      compiler: clang
+      addons:
+        apt:
+          packages: &bionic_latest_boost_packages
+            - gcc
+            - g++
+            - clang
+            - lcov
+            - libboost-dev
+
+before_install:
+  # Combine global build options with OS/compiler-dependent options
+  - export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
+  - export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
+
+install:
+  - echo ${PATH}
+  - echo ${CXX}
+  - ${CXX} --version
+  - ${CXX} -v
+  - sudo pip install codecov
+
+script:
+  ########################
+  # Build main and tests #
+  ########################
+  - mkdir -p build
+  - cd build
+  - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=Coverage ..
+  - make
+  - ctest -V
+
+after_success:
+  - cd ..
+  - pwd
+  - lcov --capture --no-external --rc lcov_branch_coverage=1 --directory . --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*' '$(pwd)/build' --output-file coverage.info
+  - lcov --list coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
