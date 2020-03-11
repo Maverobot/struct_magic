@@ -40,18 +40,12 @@ struct Data {
   }
 };
 
-template <typename T, size_t n>
-std::ostream& operator<<(std::ostream& o, const std::array<T, n>& arr) {
-  std::copy(arr.cbegin(), arr.cend(), std::ostream_iterator<T>(o, " "));
-  return o;
-}
-
 TEST_CASE("detail_util_functions", "[detail]") {
   REQUIRE_FALSE(struct_magic::detail::all_same<int, double, double>::value);
   REQUIRE(struct_magic::detail::all_same<int, int, int>::value);
 }
 
-TEST_CASE("tranform", "[struct_magic]") {
+TEST_CASE("precise-version tranform", "[struct_magic]") {
   using namespace boost::pfr::ops;
   // Structs
   Data v1{100., 11., 21., 3};
@@ -66,7 +60,6 @@ TEST_CASE("tranform", "[struct_magic]") {
   REQUIRE(v3 == Data{300, 23, 43, 8});
 
   // Transform the struct with a lambda function
-  std::cout << "v1 before: " << v1 << std::endl;
   struct_magic::apply(
       [i = 0](auto& item) mutable {
         item = i;
@@ -74,4 +67,35 @@ TEST_CASE("tranform", "[struct_magic]") {
       },
       v1);
   REQUIRE(v1 == Data{0, 1, 2, 3});
+}
+
+struct MoreData {
+  Data d;
+  bool operator==(const MoreData& other) const { return d == other.d; }
+};
+
+TEST_CASE("flat-version tranform", "[struct_magic]") {
+  using namespace boost::pfr::ops;
+  // Structs
+  MoreData v1{{100., 11., 21., 3}};
+  MoreData v2{{200., 12., 22., 5}};
+
+  // Transform each field of one struct with a lambda function
+  auto v1_double =
+      struct_magic::transform<struct_magic::flat_mode>([](const auto& v) { return v * 2; }, v1);
+  REQUIRE(v1_double == MoreData{{200., 22, 42, 6}});
+
+  // Use corresponding fields from two structs to create a new struct with a lambda function
+  auto v3 = struct_magic::transform<struct_magic::flat_mode>(
+      [](const auto& a, const auto& b) { return a + b; }, v1, v2);
+  REQUIRE(v3 == MoreData{{300, 23, 43, 8}});
+
+  // Transform the struct with a lambda function
+  struct_magic::apply<struct_magic::flat_mode>(
+      [i = 0](auto& item) mutable {
+        item = i;
+        i++;
+      },
+      v1);
+  REQUIRE(v1 == MoreData{{0, 1, 2, 3}});
 }
