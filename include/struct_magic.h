@@ -61,6 +61,7 @@ void apply_dispatch(Op&& op, Struct&& s, std::index_sequence<Is...>) {
   // TODO: in c++17 ((void) foo(std::forward<Args>(args)), ...);
   int dummy[] = {0,
                  ((void)std::forward<Op>(op)(boost::pfr::get<Is>(std::forward<Struct>(s))), 0)...};
+  (void)dummy;  // Suppress compiler warning
 }
 
 }  // namespace detail
