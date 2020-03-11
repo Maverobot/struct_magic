@@ -1,4 +1,6 @@
 /**
+ * https://github.com/Maverobot/struct_magic
+ *
  * MIT License
  *
  * Copyright (c) 2020 Zheng Qu
