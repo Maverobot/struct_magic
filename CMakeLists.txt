@@ -36,11 +36,7 @@ target_include_directories(
   INTERFACE $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_link_libraries(struct_magic INTERFACE magic_get)
-
-add_executable(struct_magic_example struct_magic_example.cpp)
-target_include_directories(
-  struct_magic_example PRIVATE include ${magic_get_SOURCE_DIR}/include)
-target_compile_features(struct_magic_example PRIVATE cxx_std_14)
+target_compile_features(struct_magic INTERFACE cxx_std_17)
 
 # Test
 if(ENABLE_TESTING)

@@ -29,9 +29,14 @@
 #include <array>    // std::array
 #include <utility>  // std::index_sequence, std::make_index_sequence
 
-#include <boost/pfr/precise.hpp>  // magic_get
+// magic_get
+#include <boost/pfr/flat.hpp>
+#include <boost/pfr/precise.hpp>
 
 namespace struct_magic {
+
+constexpr bool precise_mode = true;
+constexpr bool flat_mode = false;
 
 namespace detail {
 
@@ -47,45 +52,65 @@ struct all_true<Cond, Conds...>
 template <typename... Ts>
 struct all_same : all_true<std::is_same<get_nth_type<0, Ts...>, Ts>...> {};
 
-template <size_t index, typename Func, typename... Ts>
+template <bool mode, size_t index, typename Func, typename... Ts>
 auto transform(Func&& f, Ts&&... input) {
-  return std::forward<Func>(f)(boost::pfr::get<index>(std::forward<Ts>(input))...);
+  if constexpr (mode == precise_mode) {
+    return std::forward<Func>(f)(boost::pfr::get<index>(std::forward<Ts>(input))...);
+  } else {
+    return std::forward<Func>(f)(boost::pfr::flat_get<index>(std::forward<Ts>(input))...);
+  }
 }
 
-template <typename Func, size_t... indices, typename... Ts>
+template <bool mode, typename Func, size_t... indices, typename... Ts>
 auto transform(Func&& f, std::index_sequence<indices...>, Ts&&... input) {
   return std::decay_t<get_nth_type<0, Ts...>>{
-      transform<indices>(std::forward<Func>(f), std::forward<Ts>(input)...)...};
+      transform<mode, indices>(std::forward<Func>(f), std::forward<Ts>(input)...)...};
 }
 
-template <typename Op, typename Struct, typename std::size_t... Is>
+template <bool mode, typename Op, typename Struct, typename std::size_t... Is>
 void apply_dispatch(Op&& op, Struct&& s, std::index_sequence<Is...>) {
-  // TODO: in c++17 ((void) foo(std::forward<Args>(args)), ...);
-  int dummy[] = {0,
-                 ((void)std::forward<Op>(op)(boost::pfr::get<Is>(std::forward<Struct>(s))), 0)...};
-  (void)dummy;  // Suppress compiler warning
-}
+  if constexpr (mode == precise_mode) {
+    ((void)std::forward<Op>(op)(boost::pfr::get<Is>(std::forward<Struct>(s))), ...);
+  } else {
+    ((void)std::forward<Op>(op)(boost::pfr::flat_get<Is>(std::forward<Struct>(s))), ...);
+  }
+}  // namespace detail
 
 }  // namespace detail
 
 // Apply a transformation to turn a "list" of structs into one struct
-template <typename Func,
+template <bool mode = precise_mode,
+          typename Func,
           typename... Ts,
           typename = std::enable_if_t<detail::all_same<Ts...>::value, int>>
 auto transform(Func&& f, Ts&&... input) {
-  return detail::transform(
-      std::forward<Func>(f),
-      std::make_index_sequence<
-          boost::pfr::tuple_size<std::decay_t<detail::get_nth_type<0, Ts...>>>::value>(),
-      std::forward<Ts>(input)...);
+  if constexpr (mode == precise_mode) {
+    return detail::transform<precise_mode>(
+        std::forward<Func>(f),
+        std::make_index_sequence<
+            boost::pfr::tuple_size<std::decay_t<detail::get_nth_type<0, Ts...>>>::value>(),
+        std::forward<Ts>(input)...);
+  } else {
+    return detail::transform<flat_mode>(
+        std::forward<Func>(f),
+        std::make_index_sequence<
+            boost::pfr::flat_tuple_size<std::decay_t<detail::get_nth_type<0, Ts...>>>::value>(),
+        std::forward<Ts>(input)...);
+  }
 }
 
 // Apply a transformation function on all elements of a struct and return a tuple of results
-template <typename Op, typename Struct>
+template <bool mode = precise_mode, typename Op, typename Struct>
 void apply(Op&& op, Struct&& s) {
-  detail::apply_dispatch(
-      op, std::forward<Struct>(s),
-      std::make_index_sequence<boost::pfr::tuple_size<std::decay_t<Struct>>::value>{});
+  if constexpr (mode == precise_mode) {
+    detail::apply_dispatch<precise_mode>(
+        op, std::forward<Struct>(s),
+        std::make_index_sequence<boost::pfr::tuple_size<std::decay_t<Struct>>::value>{});
+  } else {
+    detail::apply_dispatch<flat_mode>(
+        op, std::forward<Struct>(s),
+        std::make_index_sequence<boost::pfr::flat_tuple_size<std::decay_t<Struct>>::value>{});
+  }
 }
 
 }  // namespace struct_magic
