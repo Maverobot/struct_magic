@@ -43,11 +43,35 @@ if(ENABLE_TESTING)
   add_subdirectory(test)
 endif()
 
+# CMake package configuration
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/struct_magicConfigVersion.cmake"
+  VERSION ${struct_magic_VERSION}
+  COMPATIBILITY AnyNewerVersion)
+
+install(
+  TARGETS magic_get struct_magic
+  EXPORT struct_magicTargets
+  LIBRARY DESTINATION lib COMPONENT Runtime
+  ARCHIVE DESTINATION lib COMPONENT Development
+  RUNTIME DESTINATION bin COMPONENT Runtime
+  PUBLIC_HEADER DESTINATION include COMPONENT Development
+  BUNDLE DESTINATION bin COMPONENT Runtime)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/cmake/struct_magicConfig.cmake.in"
+  "${PROJECT_BINARY_DIR}/struct_magicConfig.cmake" INSTALL_DESTINATION
+  lib/cmake/struct_magic)
+
 # Install
-include(GNUInstallDirs)
-install(FILES include/struct_magic.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY ${magic_get_SOURCE_DIR}/include/boost
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(EXPORT struct_magicTargets DESTINATION lib/cmake/struct_magic)
+install(FILES "${PROJECT_BINARY_DIR}/struct_magicConfigVersion.cmake"
+              "${PROJECT_BINARY_DIR}/struct_magicConfig.cmake"
+        DESTINATION lib/cmake/struct_magic)
+install(FILES ${PROJECT_SOURCE_DIR}/include/struct_magic.h DESTINATION include)
+install(DIRECTORY ${magic_get_SOURCE_DIR}/include/boost DESTINATION include)
 
 # Build installer
 include(InstallRequiredSystemLibraries)
