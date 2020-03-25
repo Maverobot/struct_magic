@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
-project(struct_magic
+project(
+  struct_magic
   VERSION 0.0.2
   LANGUAGES CXX)
 
