@@ -78,3 +78,7 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION_MAJOR "${struct_magic_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${struct_magic_VERSION_MINOR}")
 include(CPack)
+
+# User package registry
+export(EXPORT struct_magicTargets FILE struct_magicConfig.cmake)
+export(PACKAGE struct_magic)
