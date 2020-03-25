@@ -48,3 +48,10 @@ include(GNUInstallDirs)
 install(FILES include/struct_magic.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY ${magic_get_SOURCE_DIR}/include/boost
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# Build installer
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_VERSION_MAJOR "${struct_magic_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${struct_magic_VERSION_MINOR}")
+include(CPack)
