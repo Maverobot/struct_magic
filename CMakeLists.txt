@@ -47,7 +47,6 @@ endif()
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${PROJECT_BINARY_DIR}/struct_magicConfigVersion.cmake"
-  VERSION ${struct_magic_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(
