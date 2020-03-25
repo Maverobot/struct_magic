@@ -25,16 +25,14 @@ if(NOT magic_get_POPULATED)
 endif()
 
 add_library(magic_get INTERFACE)
-target_include_directories(magic_get
-  INTERFACE
-  $<BUILD_INTERFACE:${magic_get_SOURCE_DIR}/include>
-  )
+target_include_directories(
+  magic_get INTERFACE $<BUILD_INTERFACE:${magic_get_SOURCE_DIR}/include>
+                      $<INSTALL_INTERFACE:include>)
 
 add_library(struct_magic INTERFACE)
 target_include_directories(
-  struct_magic
-  INTERFACE $<INSTALL_INTERFACE:include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+  struct_magic INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                         $<INSTALL_INTERFACE:include>)
 target_link_libraries(struct_magic INTERFACE magic_get)
 target_compile_features(struct_magic INTERFACE cxx_std_17)
 
@@ -43,3 +41,9 @@ if(ENABLE_TESTING)
   enable_testing()
   add_subdirectory(test)
 endif()
+
+# Install
+include(GNUInstallDirs)
+install(FILES include/struct_magic.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${magic_get_SOURCE_DIR}/include/boost
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
