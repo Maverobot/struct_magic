@@ -1,4 +1,3 @@
-
 [![Build Status][travis-badge]][travis-link]
 [![codecov][codecov-badge]][codecov-link]
 [![MIT License][license-badge]](LICENSE)
