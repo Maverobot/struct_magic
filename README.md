@@ -103,6 +103,9 @@ After that, link your target against `struct_magic`:
 target_link_libraries(your_target PRIVATE struct_magic)
 ```
 
+## CHANGELOG
+See [CHANGELOG.md](./CHANGELOG.md)
+
 ## License
 This project is licensed under the [MIT][license].
 
