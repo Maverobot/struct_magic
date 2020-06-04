@@ -1,6 +1,12 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v0.1.1"></a>
+## [v0.1.1] - 2020-06-04
+### Bug Fixes
+- **cmake:** disable testing by default
+
 ### Documentation
 - **changelog:** added chglog and initial changelog
 - **readme:** added more description and examples
@@ -34,4 +40,5 @@
 - **test:** added catch2 based tests
 
 
-[Unreleased]: https://github.com/Maverobot/struct_magic/compare/v0.1...HEAD
+[Unreleased]: https://github.com/Maverobot/struct_magic/compare/v0.1.1...HEAD
+[v0.1.1]: https://github.com/Maverobot/struct_magic/compare/v0.1...v0.1.1

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 project(
   struct_magic
-  VERSION 0.1
+  VERSION 0.1.1
   LANGUAGES CXX)
 
 option(ENABLE_TESTING "Enable testing for this project" OFF)
