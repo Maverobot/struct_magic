@@ -4,7 +4,7 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
-option(ENABLE_TESTING "Enable testing for this project" ON)
+option(ENABLE_TESTING "Enable testing for this project" OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
