@@ -72,11 +72,25 @@ install(FILES "${PROJECT_BINARY_DIR}/struct_magicConfigVersion.cmake"
 install(FILES ${PROJECT_SOURCE_DIR}/include/struct_magic.h DESTINATION include)
 install(DIRECTORY ${magic_get_SOURCE_DIR}/include/boost DESTINATION include)
 
-# Build installer
+# CPack
 include(InstallRequiredSystemLibraries)
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_CONTACT "quzhengrobot@gmail.com")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION_MAJOR "${struct_magic_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${struct_magic_VERSION_MINOR}")
+
+# Debian
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+find_program(DPKG_PROG dpkg DOC "'dpkg' executable")
+if(DPKG_PROG)
+  execute_process(
+    COMMAND ${DPKG_PROG} --print-architecture
+    OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  # Change system name to use the correct architecture in file name
+  set(CPACK_SYSTEM_NAME ${CPACK_DEBIAN_PACKAGE_ARCHITECTURE})
+endif()
 include(CPack)
 
 # User package registry
