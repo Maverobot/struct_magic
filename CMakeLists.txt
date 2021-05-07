@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 project(
   struct_magic
-  VERSION 0.1.1
+  VERSION 0.2.1
   LANGUAGES CXX)
 
 option(ENABLE_TESTING "Enable testing for this project" OFF)
@@ -19,7 +19,7 @@ include(FetchContent)
 FetchContent_Declare(
   magic_get
   GIT_REPOSITORY https://github.com/apolukhin/magic_get.git
-  GIT_TAG 1.0.0)
+  GIT_TAG 2.0.1)
 FetchContent_GetProperties(magic_get)
 if(NOT magic_get_POPULATED)
   FetchContent_Populate(magic_get)
