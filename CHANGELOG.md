@@ -2,6 +2,16 @@
 ## [Unreleased]
 
 
+<a name="v0.2.1"></a>
+## [v0.2.1] - 2021-05-08
+
+<a name="continuous"></a>
+## [continuous] - 2021-05-08
+### Features
+- **cpack:** added debian to cpack
+- **magic_get:** use the latest magic_get 2.0.1
+
+
 <a name="v0.1.1"></a>
 ## [v0.1.1] - 2020-06-04
 ### Bug Fixes
@@ -40,5 +50,7 @@
 - **test:** added catch2 based tests
 
 
-[Unreleased]: https://github.com/Maverobot/struct_magic/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Maverobot/struct_magic/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/Maverobot/struct_magic/compare/continuous...v0.2.1
+[continuous]: https://github.com/Maverobot/struct_magic/compare/v0.1.1...continuous
 [v0.1.1]: https://github.com/Maverobot/struct_magic/compare/v0.1...v0.1.1
