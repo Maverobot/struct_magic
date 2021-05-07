@@ -16,15 +16,6 @@
 ## [v0.1.1] - 2020-06-04
 ### Bug Fixes
 - **cmake:** disable testing by default
-
-### Documentation
-- **changelog:** added chglog and initial changelog
-- **readme:** added more description and examples
-
-
-<a name="v0.1"></a>
-## v0.1 - 2020-03-27
-### Bug Fixes
 - **cmake:** removed a redundant line
 - **cmake:** formatted
 - **core:** removed the unnecessary example file
@@ -32,8 +23,10 @@
 - **readme:** removed a empty line
 
 ### Documentation
+- **changelog:** added chglog and initial changelog
 - **comment:** added repo link in comment block
 - **license:** added MIT license to code
+- **readme:** added more description and examples
 - **readme:** added single header link to readme
 
 ### Features
@@ -49,6 +42,9 @@
 - **test:** added test for flat-version interface
 - **test:** added catch2 based tests
 
+
+<a name="v0.1"></a>
+## v0.1 - 2020-03-27
 
 [Unreleased]: https://github.com/Maverobot/struct_magic/compare/v0.2.1...HEAD
 [v0.2.1]: https://github.com/Maverobot/struct_magic/compare/continuous...v0.2.1
